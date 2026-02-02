@@ -370,18 +370,18 @@
 
         <!-- Category Tabs -->
         <div class="category-tabs">
-            <button class="category-tab active">All Templates</button>
-            <button class="category-tab">🏠 Real Estate</button>
-            <button class="category-tab">👋 Welcome</button>
-            <button class="category-tab">📅 Follow-Up</button>
-            <button class="category-tab">🎉 Celebration</button>
-            <button class="category-tab">📋 Inquiry</button>
+            <button class="category-tab active" data-category="all" onclick="filterTemplates('all', this)">All Templates</button>
+            <button class="category-tab" data-category="real-estate" onclick="filterTemplates('real-estate', this)">🏠 Real Estate</button>
+            <button class="category-tab" data-category="welcome" onclick="filterTemplates('welcome', this)">👋 Welcome</button>
+            <button class="category-tab" data-category="follow-up" onclick="filterTemplates('follow-up', this)">📅 Follow-Up</button>
+            <button class="category-tab" data-category="celebration" onclick="filterTemplates('celebration', this)">🎉 Celebration</button>
+            <button class="category-tab" data-category="inquiry" onclick="filterTemplates('inquiry', this)">📋 Inquiry</button>
         </div>
 
         <!-- Templates Grid -->
-        <div class="templates-grid">
+        <div class="templates-grid" id="templates-grid">
             <!-- Template 1 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="welcome" onclick="showToast('📋 Copied to clipboard!')">>
                 <div class="template-header">
                     <div class="template-icon">👋</div>
                     <div class="template-actions">
@@ -398,7 +398,7 @@
             </div>
 
             <!-- Template 2 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="real-estate follow-up" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">📅</div>
                     <div class="template-actions">
@@ -415,7 +415,7 @@
             </div>
 
             <!-- Template 3 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="follow-up" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">💭</div>
                     <div class="template-actions">
@@ -432,7 +432,7 @@
             </div>
 
             <!-- Template 4 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="real-estate" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">🏠</div>
                     <div class="template-actions">
@@ -449,7 +449,7 @@
             </div>
 
             <!-- Template 5 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="celebration" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">🎉</div>
                     <div class="template-actions">
@@ -466,7 +466,7 @@
             </div>
 
             <!-- Template 6 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="follow-up" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">⏰</div>
                     <div class="template-actions">
@@ -483,7 +483,7 @@
             </div>
 
             <!-- Template 7 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="inquiry" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">📋</div>
                     <div class="template-actions">
@@ -500,7 +500,7 @@
             </div>
 
             <!-- Template 8 -->
-            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+            <div class="template-card" data-categories="celebration follow-up" onclick="showToast('📋 Copied to clipboard!')">
                 <div class="template-header">
                     <div class="template-icon">🌟</div>
                     <div class="template-actions">
@@ -576,6 +576,29 @@
             toast.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function filterTemplates(category, btn) {
+            // Update active tab
+            document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Filter templates
+            const cards = document.querySelectorAll('.template-card');
+            cards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const categories = card.dataset.categories || '';
+                    if (categories.includes(category)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+            
+            showToast(`📂 Showing ${category === 'all' ? 'all templates' : category + ' templates'}`);
         }
 
         // Close modal on overlay click
