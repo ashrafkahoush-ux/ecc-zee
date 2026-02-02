@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --success: #7cb87c;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-left h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .header-left p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-primary);
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .kpi-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--kpi-color, var(--gold-primary));
+        }
+
+        .kpi-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--kpi-bg, var(--gold-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .kpi-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .kpi-trend {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .chart-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Funnel Visualization */
+        .funnel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .funnel-bar {
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            color: white;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .funnel-bar:hover {
+            transform: scaleX(1.02);
+        }
+
+        .funnel-stats {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            min-width: 80px;
+            text-align: right;
+        }
+
+        /* Revenue Breakdown */
+        .revenue-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .revenue-item:last-child {
+            border-bottom: none;
+        }
+
+        .revenue-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .revenue-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .revenue-value {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Leaderboard */
+        .leaderboard {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .lead-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .lead-row:hover {
+            background: var(--gold-light);
+        }
+
+        .lead-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .lead-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-primary), var(--terracotta));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .lead-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .lead-property {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .lead-value {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--gold-dark);
+        }
+
+        .lead-tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: var(--terracotta);
+        }
+
+        @media (max-width: 1024px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid { grid-template-columns: 1fr; }
+            .container { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <div class="header-left">
+                <h1>📈 Reports & Analytics</h1>
+                <p>Track your performance and insights</p>
+            </div>
+            <button class="btn btn-primary">📤 Export Report</button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card" style="--kpi-color: var(--gold-primary); --kpi-bg: var(--gold-light);">
+                <div class="kpi-icon">💰</div>
+                <div class="kpi-trend">↑ 18%</div>
+                <div class="kpi-value">$2.4M</div>
+                <div class="kpi-label">Total Pipeline Value</div>
+            </div>
+            <div class="kpi-card" style="--kpi-color: var(--sage); --kpi-bg: rgba(139, 154, 125, 0.15);">
+                <div class="kpi-icon">📊</div>
+                <div class="kpi-trend">↑ 12%</div>
+                <div class="kpi-value">32%</div>
+                <div class="kpi-label">Conversion Rate</div>
+            </div>
+            <div class="kpi-card" style="--kpi-color: var(--terracotta); --kpi-bg: rgba(193, 127, 89, 0.15);">
+                <div class="kpi-icon">⏱️</div>
+                <div class="kpi-value">18</div>
+                <div class="kpi-label">Avg. Days to Close</div>
+            </div>
+            <div class="kpi-card" style="--kpi-color: var(--rose); --kpi-bg: rgba(212, 165, 165, 0.15);">
+                <div class="kpi-icon">🎯</div>
+                <div class="kpi-trend">↑ 5%</div>
+                <div class="kpi-value">85%</div>
+                <div class="kpi-label">Lead Response Rate</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">🎯 Pipeline Funnel</h3>
+                <div class="funnel">
+                    <div class="funnel-stage">
+                        <div class="funnel-bar" style="width: 100%; background: var(--sage);">New Leads — 24</div>
+                        <span class="funnel-stats">100%</span>
+                    </div>
+                    <div class="funnel-stage">
+                        <div class="funnel-bar" style="width: 75%; background: var(--gold-primary);">Qualified — 18</div>
+                        <span class="funnel-stats">75%</span>
+                    </div>
+                    <div class="funnel-stage">
+                        <div class="funnel-bar" style="width: 50%; background: var(--terracotta);">Viewing — 12</div>
+                        <span class="funnel-stats">50%</span>
+                    </div>
+                    <div class="funnel-stage">
+                        <div class="funnel-bar" style="width: 33%; background: var(--rose);">Negotiation — 8</div>
+                        <span class="funnel-stats">33%</span>
+                    </div>
+                    <div class="funnel-stage">
+                        <div class="funnel-bar" style="width: 20%; background: var(--charcoal);">Closed Won — 5</div>
+                        <span class="funnel-stats">21%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title">💰 Revenue Breakdown</h3>
+                <div class="revenue-item">
+                    <div class="revenue-label">
+                        <span class="revenue-dot" style="background: var(--gold-primary);"></span>
+                        <span>Total Closed</span>
+                    </div>
+                    <span class="revenue-value">$480,000</span>
+                </div>
+                <div class="revenue-item">
+                    <div class="revenue-label">
+                        <span class="revenue-dot" style="background: var(--sage);"></span>
+                        <span>In Pipeline</span>
+                    </div>
+                    <span class="revenue-value">$1,920,000</span>
+                </div>
+                <div class="revenue-item">
+                    <div class="revenue-label">
+                        <span class="revenue-dot" style="background: var(--terracotta);"></span>
+                        <span>Your Commission (20%)</span>
+                    </div>
+                    <span class="revenue-value" style="color: var(--gold-primary);">$96,000</span>
+                </div>
+                <div class="revenue-item">
+                    <div class="revenue-label">
+                        <span class="revenue-dot" style="background: var(--rose);"></span>
+                        <span>Projected (Pipeline)</span>
+                    </div>
+                    <span class="revenue-value">$384,000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="leaderboard">
+            <h3 class="chart-title">🔥 Hot Leads</h3>
+            <div class="lead-row">
+                <div class="lead-info">
+                    <div class="lead-avatar">SM</div>
+                    <div>
+                        <div class="lead-name">Sarah Mitchell</div>
+                        <div class="lead-property">Villa • Palm Hills</div>
+                    </div>
+                </div>
+                <span class="lead-tag">HOT</span>
+                <span class="lead-value">$850,000</span>
+            </div>
+            <div class="lead-row">
+                <div class="lead-info">
+                    <div class="lead-avatar">FA</div>
+                    <div>
+                        <div class="lead-name">Fatima Al-Rashid</div>
+                        <div class="lead-property">Penthouse • New Cairo</div>
+                    </div>
+                </div>
+                <span class="lead-tag">HOT</span>
+                <span class="lead-value">$1,200,000</span>
+            </div>
+            <div class="lead-row">
+                <div class="lead-info">
+                    <div class="lead-avatar">MS</div>
+                    <div>
+                        <div class="lead-name">Maria Santos</div>
+                        <div class="lead-property">Villa • Sheikh Zayed</div>
+                    </div>
+                </div>
+                <span class="lead-tag">HOT</span>
+                <span class="lead-value">$1,500,000</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

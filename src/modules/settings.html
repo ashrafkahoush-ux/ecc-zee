@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --success: #7cb87c;
+            --danger: #d47c7c;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0;
+        }
+
+        .tab {
+            padding: 0.875rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+        }
+
+        .tab:hover { color: var(--text-primary); }
+
+        .tab.active {
+            color: var(--gold-primary);
+            border-bottom-color: var(--gold-primary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Settings Card */
+        .settings-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Form Elements */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--bg-primary);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            background: var(--bg-secondary);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Toggle Row */
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .toggle-row:last-child { border-bottom: none; }
+
+        .toggle-info h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .toggle-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #e0e0e0;
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: var(--sage);
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Pipeline Stages */
+        .stage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .stage-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            cursor: grab;
+        }
+
+        .stage-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+        }
+
+        .stage-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .stage-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .stage-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stage-btn:hover { background: var(--gold-light); }
+
+        /* Buttons */
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .btn-primary:hover { background: var(--gold-primary); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .btn-danger {
+            background: rgba(212, 124, 124, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(212, 124, 124, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        /* Integration Cards */
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .integration-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .integration-card:hover {
+            background: var(--gold-light);
+        }
+
+        .integration-icon {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .integration-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .integration-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .integration-status.connected {
+            color: var(--sage);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .tabs { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>⚙️ Settings</h1>
+            <p>Customize your Command Center experience</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('profile')">👤 Profile</button>
+            <button class="tab" onclick="showTab('pipeline')">🎯 Pipeline</button>
+            <button class="tab" onclick="showTab('notifications')">🔔 Notifications</button>
+            <button class="tab" onclick="showTab('integrations')">🔗 Integrations</button>
+            <button class="tab" onclick="showTab('data')">💾 Data</button>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="tab-profile" class="tab-content active">
+            <div class="settings-card">
+                <h3 class="card-title">👤 Profile Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" value="Zee Benzarrougue">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" value="zee@example.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="tel" class="form-input" value="+971 50 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Company</label>
+                        <input type="text" class="form-input" value="Independent Real Estate Advisor">
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Bio</label>
+                    <textarea class="form-textarea" placeholder="Tell clients about yourself...">Luxury real estate specialist with 5+ years experience in premium properties across Dubai and Cairo.</textarea>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="showToast('✨ Profile saved!')">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pipeline Tab -->
+        <div id="tab-pipeline" class="tab-content">
+            <div class="settings-card">
+                <h3 class="card-title">🎯 Pipeline Stages</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">Drag to reorder stages. Click the color to change.</p>
+                <div class="stage-list">
+                    <div class="stage-item">
+                        <span class="stage-color" style="background: var(--sage);"></span>
+                        <span class="stage-name">New Lead</span>
+                        <div class="stage-actions">
+                            <button class="stage-btn">✏️</button>
+                            <button class="stage-btn">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="stage-item">
+                        <span class="stage-color" style="background: var(--gold-primary);"></span>
+                        <span class="stage-name">Qualified</span>
+                        <div class="stage-actions">
+                            <button class="stage-btn">✏️</button>
+                            <button class="stage-btn">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="stage-item">
+                        <span class="stage-color" style="background: var(--terracotta);"></span>
+                        <span class="stage-name">Viewing</span>
+                        <div class="stage-actions">
+                            <button class="stage-btn">✏️</button>
+                            <button class="stage-btn">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="stage-item">
+                        <span class="stage-color" style="background: var(--rose);"></span>
+                        <span class="stage-name">Negotiation</span>
+                        <div class="stage-actions">
+                            <button class="stage-btn">✏️</button>
+                            <button class="stage-btn">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="stage-item">
+                        <span class="stage-color" style="background: var(--charcoal);"></span>
+                        <span class="stage-name">Closed Won</span>
+                        <div class="stage-actions">
+                            <button class="stage-btn">✏️</button>
+                            <button class="stage-btn">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group" style="justify-content: space-between;">
+                    <button class="btn btn-secondary" onclick="showToast('✨ New stage added!')">+ Add Stage</button>
+                    <button class="btn btn-primary" onclick="showToast('✨ Pipeline saved!')">Save Pipeline</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div id="tab-notifications" class="tab-content">
+            <div class="settings-card">
+                <h3 class="card-title">🔔 Notification Preferences</h3>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>New Lead Alerts</h4>
+                        <p>Get notified when a new lead is added</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Viewing Reminders</h4>
+                        <p>Reminder 24h before scheduled viewings</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Stale Lead Warnings</h4>
+                        <p>Alert when leads have no activity for 7 days</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Weekly Summary</h4>
+                        <p>Receive weekly performance report via email</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Deal Closed Celebration</h4>
+                        <p>Notification when a deal is marked as won</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Integrations Tab -->
+        <div id="tab-integrations" class="tab-content">
+            <div class="settings-card">
+                <h3 class="card-title">🔗 Connected Services</h3>
+                <div class="integration-grid">
+                    <div class="integration-card" onclick="showToast('✨ WhatsApp connected!')">
+                        <div class="integration-icon">📱</div>
+                        <div class="integration-name">WhatsApp</div>
+                        <div class="integration-status connected">● Connected</div>
+                    </div>
+                    <div class="integration-card" onclick="showToast('📧 Connect your email...')">
+                        <div class="integration-icon">📧</div>
+                        <div class="integration-name">Email</div>
+                        <div class="integration-status">Click to connect</div>
+                    </div>
+                    <div class="integration-card" onclick="showToast('📅 Connect calendar...')">
+                        <div class="integration-icon">📅</div>
+                        <div class="integration-name">Calendar</div>
+                        <div class="integration-status">Click to connect</div>
+                    </div>
+                    <div class="integration-card" onclick="showToast('📊 Connect CRM...')">
+                        <div class="integration-icon">📊</div>
+                        <div class="integration-name">CRM Sync</div>
+                        <div class="integration-status">Click to connect</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Tab -->
+        <div id="tab-data" class="tab-content">
+            <div class="settings-card">
+                <h3 class="card-title">💾 Data Management</h3>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Export All Data</h4>
+                        <p>Download all leads, activities, and settings as CSV</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="showToast('📥 Data exported!')">Export</button>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Import Backup</h4>
+                        <p>Restore from a previous export file</p>
+                    </div>
+                    <button class="btn btn-secondary" onclick="showToast('📤 Select backup file...')">Import</button>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Clear All Data</h4>
+                        <p>Permanently delete all leads and settings</p>
+                    </div>
+                    <button class="btn btn-danger" onclick="if(confirm('Are you sure? This cannot be undone.')) showToast('🗑️ Data cleared')">Clear Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✨ Saved!</div>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

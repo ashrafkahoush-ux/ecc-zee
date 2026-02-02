@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Templates | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Category Sections */
+        .category-section {
+            margin-bottom: 3rem;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .category-icon.welcome { background: linear-gradient(135deg, var(--sage), #6b7a5d); }
+        .category-icon.viewing { background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)); }
+        .category-icon.followup { background: linear-gradient(135deg, var(--terracotta), #a16949); }
+        .category-icon.closing { background: linear-gradient(135deg, var(--rose), #b48585); }
+
+        .category-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        /* Templates Grid */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .template-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .template-top {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .template-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .template-badge {
+            padding: 0.25rem 0.75rem;
+            background: var(--gold-light);
+            color: var(--gold-dark);
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .template-body {
+            padding: 1.25rem 1.5rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            min-height: 140px;
+        }
+
+        .template-body .variable {
+            color: var(--gold-primary);
+            font-weight: 500;
+        }
+
+        .template-footer {
+            padding: 1rem 1.5rem;
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .template-uses {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            padding: 0.5rem 1rem;
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover { background: var(--gold-primary); }
+
+        /* Quick Tips */
+        .tips-section {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            margin-top: 2rem;
+        }
+
+        .tips-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .tip-item {
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 10px;
+        }
+
+        .tip-item h4 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .tip-item p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 768px) {
+            .templates-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🏠 Real Estate Templates</h1>
+            <p>Professional message templates crafted for luxury real estate sales</p>
+        </div>
+
+        <!-- Welcome & First Contact -->
+        <div class="category-section">
+            <div class="category-header">
+                <div class="category-icon welcome">👋</div>
+                <h2 class="category-title">Welcome & First Contact</h2>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">New Lead Welcome</span>
+                        <span class="template-badge">Most Used</span>
+                    </div>
+                    <div class="template-body">
+                        Hello <span class="variable">{name}</span>! 👋<br><br>
+                        Thank you for your interest in finding your perfect property. I'm Zee, your personal real estate advisor, and I'd love to help you on this exciting journey.<br><br>
+                        May I ask what type of property you're looking for? 🏡
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 47 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Luxury Introduction</span>
+                        <span class="template-badge">Premium</span>
+                    </div>
+                    <div class="template-body">
+                        Dear <span class="variable">{name}</span>,<br><br>
+                        Welcome to an exclusive property experience. I specialize in luxury residences across <span class="variable">{location}</span> and would be delighted to curate a selection tailored to your refined preferences.<br><br>
+                        When would be convenient for a brief conversation? ✨
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 23 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Requirements Inquiry</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 🌟<br><br>
+                        To help find your ideal property, could you share:<br>
+                        • Preferred location?<br>
+                        • Number of bedrooms?<br>
+                        • Budget range?<br>
+                        • Buy or rent?<br><br>
+                        Looking forward to helping you! 💫
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 31 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Viewing & Appointments -->
+        <div class="category-section">
+            <div class="category-header">
+                <div class="category-icon viewing">📅</div>
+                <h2 class="category-title">Viewing & Appointments</h2>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Viewing Confirmation</span>
+                        <span class="template-badge">Essential</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! ✨<br><br>
+                        Confirming our viewing at <span class="variable">{property_name}</span> on <span class="variable">{date}</span> at <span class="variable">{time}</span>.<br><br>
+                        I'll meet you at the entrance. Looking forward to showing you this beautiful space! 🏠
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 56 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Viewing Reminder</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 🔔<br><br>
+                        Gentle reminder about our viewing tomorrow at <span class="variable">{time}</span> for <span class="variable">{property_name}</span>.<br><br>
+                        See you there! Let me know if anything changes. 📍
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 34 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Reschedule Request</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>,<br><br>
+                        I completely understand that plans change! What other times work for you to view <span class="variable">{property_name}</span>?<br><br>
+                        I'm flexible and happy to accommodate your schedule. 🗓️
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 12 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Follow-Up -->
+        <div class="category-section">
+            <div class="category-header">
+                <div class="category-icon followup">💬</div>
+                <h2 class="category-title">Follow-Up Messages</h2>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Post-Viewing Feedback</span>
+                        <span class="template-badge">High Convert</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 🌟<br><br>
+                        Thank you for viewing <span class="variable">{property_name}</span> today! I'd love to hear your thoughts.<br><br>
+                        What did you like most? Any questions I can answer? 💭
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 42 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">New Property Match</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 🏡<br><br>
+                        Exciting news! A new <span class="variable">{bedrooms}</span>-bedroom <span class="variable">{property_type}</span> just listed in <span class="variable">{location}</span> at <span class="variable">{price}</span>.<br><br>
+                        It matches your criteria perfectly! Want to see it? ✨
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 28 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Re-Engagement</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 👋<br><br>
+                        It's been a while since we connected. I wanted to check if you're still looking for properties?<br><br>
+                        The market has exciting new options! Would you like an update? 📊
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 19 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Closing & Celebration -->
+        <div class="category-section">
+            <div class="category-header">
+                <div class="category-icon closing">🎉</div>
+                <h2 class="category-title">Closing & Celebration</h2>
+            </div>
+            <div class="templates-grid">
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Deal Congratulations</span>
+                        <span class="template-badge">Celebration</span>
+                    </div>
+                    <div class="template-body">
+                        🎉 Congratulations <span class="variable">{name}</span>!<br><br>
+                        I'm thrilled to have helped you find your perfect home at <span class="variable">{property_name}</span>!<br><br>
+                        Wishing you endless happiness in your new space. I'm always here if you need anything! 🏠✨
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 15 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Referral Request</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 🌟<br><br>
+                        I hope you're loving your new home! If you know anyone looking for properties, I'd be honored by a referral.<br><br>
+                        Your trust means everything to me. Thank you! 🙏
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 11 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-top">
+                        <span class="template-title">Anniversary Check-In</span>
+                    </div>
+                    <div class="template-body">
+                        Hi <span class="variable">{name}</span>! 🎂<br><br>
+                        Happy 1-year anniversary in your beautiful home at <span class="variable">{property_name}</span>!<br><br>
+                        Hope you're still loving every moment. Always here if you need me! 💫
+                    </div>
+                    <div class="template-footer">
+                        <span class="template-uses">Used 8 times</span>
+                        <button class="copy-btn" onclick="copyTemplate(this)">📋 Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Tips -->
+        <div class="tips-section">
+            <h3 class="tips-title">💡 Template Best Practices</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <h4>Personalize Always</h4>
+                    <p>Use {name} and specific details to make each message feel personal</p>
+                </div>
+                <div class="tip-item">
+                    <h4>Respond Quickly</h4>
+                    <p>First response within 5 minutes increases conversion by 400%</p>
+                </div>
+                <div class="tip-item">
+                    <h4>End with Question</h4>
+                    <p>Open-ended questions encourage replies and engagement</p>
+                </div>
+                <div class="tip-item">
+                    <h4>Be Authentic</h4>
+                    <p>Templates are starting points — add your unique voice</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">📋 Copied to clipboard!</div>
+
+    <script>
+        function copyTemplate(btn) {
+            const templateBody = btn.closest('.template-card').querySelector('.template-body');
+            const text = templateBody.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('📋 Copied to clipboard!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automations | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --success: #7cb87c;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-left h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-left p { color: var(--text-muted); }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .btn-primary:hover { background: var(--gold-primary); }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--stat-color, var(--gold-primary));
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Automation Cards */
+        .automations-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .automation-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .automation-card:hover {
+            box-shadow: var(--shadow-soft);
+            border-color: var(--gold-primary);
+        }
+
+        .automation-card.disabled { opacity: 0.5; }
+
+        .automation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .automation-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .automation-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: var(--icon-bg, var(--gold-light));
+        }
+
+        .automation-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .automation-trigger {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Toggle Switch */
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle input { opacity: 0; width: 0; height: 0; }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #e0e0e0;
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: var(--sage);
+        }
+
+        .toggle input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Flow Visualization */
+        .automation-flow {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .flow-step.trigger { border-color: var(--sage); color: var(--sage); }
+        .flow-step.condition { border-color: var(--gold-primary); color: var(--gold-dark); }
+        .flow-step.action { border-color: var(--terracotta); color: var(--terracotta); }
+
+        .flow-arrow { color: var(--text-muted); }
+
+        .automation-stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Templates Section */
+        .templates-section { margin-top: 3rem; }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .template-card {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--border-light);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: var(--gold-primary);
+            border-style: solid;
+            background: var(--gold-light);
+        }
+
+        .template-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .template-name { font-weight: 600; margin-bottom: 0.5rem; }
+        .template-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .template-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <div class="header-left">
+                <h1>⚡ Automations</h1>
+                <p>Set it and forget it — let the system work for you</p>
+            </div>
+            <button class="btn btn-primary" onclick="showToast('✨ Automation builder coming soon!')">+ Create Automation</button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value" style="--stat-color: var(--sage);">5</div>
+                <div class="stat-label">Active Automations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="--stat-color: var(--gold-primary);">127</div>
+                <div class="stat-label">Actions This Month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="--stat-color: var(--terracotta);">4.2h</div>
+                <div class="stat-label">Time Saved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" style="--stat-color: var(--rose);">92%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+
+        <!-- Automations List -->
+        <div class="automations-grid">
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-title">
+                        <div class="automation-icon" style="--icon-bg: rgba(139, 154, 125, 0.2);">👋</div>
+                        <div>
+                            <div class="automation-name">New Lead Welcome</div>
+                            <div class="automation-trigger">Triggers: When lead is created</div>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked onchange="toggleAutomation(this, 'New Lead Welcome')">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="automation-flow">
+                    <div class="flow-step trigger">🎯 New Lead Added</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step condition">⏱️ Wait 5 min</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">📱 Send WhatsApp Intro</div>
+                </div>
+                <div class="automation-stats">
+                    <span>📊 Ran 24 times</span>
+                    <span>✅ 100% success</span>
+                    <span>🕐 Last: 2 hours ago</span>
+                </div>
+            </div>
+
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-title">
+                        <div class="automation-icon" style="--icon-bg: rgba(201, 168, 124, 0.2);">⚠️</div>
+                        <div>
+                            <div class="automation-name">Stale Lead Alert</div>
+                            <div class="automation-trigger">Triggers: No activity for 7 days</div>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked onchange="toggleAutomation(this, 'Stale Lead Alert')">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="automation-flow">
+                    <div class="flow-step trigger">📅 7 Days No Activity</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step condition">🏷️ If stage ≠ Closed</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">🔔 Alert + Re-engage</div>
+                </div>
+                <div class="automation-stats">
+                    <span>📊 Ran 18 times</span>
+                    <span>✅ 94% success</span>
+                    <span>🕐 Last: 1 day ago</span>
+                </div>
+            </div>
+
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-title">
+                        <div class="automation-icon" style="--icon-bg: rgba(193, 127, 89, 0.2);">📅</div>
+                        <div>
+                            <div class="automation-name">Viewing Reminder</div>
+                            <div class="automation-trigger">Triggers: 24h before scheduled viewing</div>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked onchange="toggleAutomation(this, 'Viewing Reminder')">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="automation-flow">
+                    <div class="flow-step trigger">⏰ 24h Before Viewing</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">📱 Send Reminder</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">📧 Email Details</div>
+                </div>
+                <div class="automation-stats">
+                    <span>📊 Ran 42 times</span>
+                    <span>✅ 100% success</span>
+                    <span>🕐 Last: 3 hours ago</span>
+                </div>
+            </div>
+
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-title">
+                        <div class="automation-icon" style="--icon-bg: rgba(212, 165, 165, 0.2);">✅</div>
+                        <div>
+                            <div class="automation-name">Post-Viewing Follow-Up</div>
+                            <div class="automation-trigger">Triggers: Lead moves to Viewing stage</div>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked onchange="toggleAutomation(this, 'Post-Viewing Follow-Up')">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="automation-flow">
+                    <div class="flow-step trigger">📊 Stage → Viewing</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step condition">⏱️ Wait 4 hours</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">📝 Feedback Request</div>
+                </div>
+                <div class="automation-stats">
+                    <span>📊 Ran 31 times</span>
+                    <span>✅ 87% success</span>
+                    <span>🕐 Last: Yesterday</span>
+                </div>
+            </div>
+
+            <div class="automation-card">
+                <div class="automation-header">
+                    <div class="automation-title">
+                        <div class="automation-icon" style="--icon-bg: var(--gold-light);">🎉</div>
+                        <div>
+                            <div class="automation-name">Deal Closed Celebration</div>
+                            <div class="automation-trigger">Triggers: Lead moves to Closed Won</div>
+                        </div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked onchange="toggleAutomation(this, 'Deal Closed Celebration')">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="automation-flow">
+                    <div class="flow-step trigger">🏆 Stage → Closed Won</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">🎊 Log Commission</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step action">📧 Thank You + Referral</div>
+                </div>
+                <div class="automation-stats">
+                    <span>📊 Ran 12 times</span>
+                    <span>✅ 100% success</span>
+                    <span>🕐 Last: 2 days ago</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Templates -->
+        <div class="templates-section">
+            <h2 class="section-title">📋 Quick Templates</h2>
+            <div class="template-grid">
+                <div class="template-card" onclick="showToast('✨ Birthday Wishes automation added!')">
+                    <div class="template-icon">🎂</div>
+                    <div class="template-name">Birthday Wishes</div>
+                    <div class="template-desc">Send birthday greetings automatically</div>
+                </div>
+                <div class="template-card" onclick="showToast('✨ Weekly Summary automation added!')">
+                    <div class="template-icon">📊</div>
+                    <div class="template-name">Weekly Summary</div>
+                    <div class="template-desc">Auto-generate report every Monday</div>
+                </div>
+                <div class="template-card" onclick="showToast('✨ Hot Lead Alert automation added!')">
+                    <div class="template-icon">🔥</div>
+                    <div class="template-name">Hot Lead Alert</div>
+                    <div class="template-desc">Instant notification for hot leads</div>
+                </div>
+                <div class="template-card" onclick="showToast('✨ Contract Expiry automation added!')">
+                    <div class="template-icon">📄</div>
+                    <div class="template-name">Contract Expiry</div>
+                    <div class="template-desc">Reminder 30 days before contract ends</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✨ Automation updated!</div>
+
+    <script>
+        function toggleAutomation(checkbox, name) {
+            const card = checkbox.closest('.automation-card');
+            if (checkbox.checked) {
+                card.classList.remove('disabled');
+            } else {
+                card.classList.add('disabled');
+            }
+            showToast(`${checkbox.checked ? '✅' : '⏸️'} ${name} ${checkbox.checked ? 'enabled' : 'disabled'}`);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

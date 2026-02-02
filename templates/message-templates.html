@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Templates | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .btn-primary:hover { background: var(--gold-primary); }
+
+        /* Category Tabs */
+        .category-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 0.75rem 1.25rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .category-tab:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        .category-tab.active {
+            background: var(--charcoal);
+            color: white;
+            border-color: var(--charcoal);
+        }
+
+        /* Templates Grid */
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .template-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+            border-color: var(--gold-light);
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .template-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .template-action {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .template-action:hover { background: var(--gold-light); }
+
+        .template-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-preview {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .template-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .template-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-primary);
+            border-radius: 15px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Create Template Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--bg-primary);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--bg-primary);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            background: var(--bg-secondary);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .variable-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .variable-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .variable-tag {
+            padding: 0.25rem 0.5rem;
+            background: var(--gold-light);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: var(--gold-dark);
+            cursor: pointer;
+        }
+
+        .variable-tag:hover {
+            background: var(--gold-primary);
+            color: white;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 768px) {
+            .header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+            .templates-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>💬 Message Templates</h1>
+            <button class="btn btn-primary" onclick="openModal()">+ New Template</button>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="category-tabs">
+            <button class="category-tab active">All Templates</button>
+            <button class="category-tab">🏠 Real Estate</button>
+            <button class="category-tab">👋 Welcome</button>
+            <button class="category-tab">📅 Follow-Up</button>
+            <button class="category-tab">🎉 Celebration</button>
+            <button class="category-tab">📋 Inquiry</button>
+        </div>
+
+        <!-- Templates Grid -->
+        <div class="templates-grid">
+            <!-- Template 1 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">👋</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation(); showToast('✏️ Editing...')">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation(); showToast('🗑️ Deleted')">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">New Lead Welcome</h3>
+                <p class="template-preview">Hello {name}! 👋 Thank you for your interest in {property_type}. I'm Zee, your personal real estate advisor. I'd love to understand your requirements better...</p>
+                <div class="template-tags">
+                    <span class="template-tag">Welcome</span>
+                    <span class="template-tag">First Contact</span>
+                </div>
+            </div>
+
+            <!-- Template 2 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">📅</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">Viewing Confirmation</h3>
+                <p class="template-preview">Hi {name}! Just confirming our viewing appointment for {property_name} on {date} at {time}. I'll meet you at the property entrance. Looking forward to showing you this beautiful space! ✨</p>
+                <div class="template-tags">
+                    <span class="template-tag">Viewing</span>
+                    <span class="template-tag">Confirmation</span>
+                </div>
+            </div>
+
+            <!-- Template 3 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">💭</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">Post-Viewing Follow-Up</h3>
+                <p class="template-preview">Hi {name}! Thank you for viewing {property_name} today. I'd love to hear your thoughts! What did you like most about the property? Is there anything else you'd like to see?</p>
+                <div class="template-tags">
+                    <span class="template-tag">Follow-Up</span>
+                    <span class="template-tag">Viewing</span>
+                </div>
+            </div>
+
+            <!-- Template 4 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">🏠</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">New Property Match</h3>
+                <p class="template-preview">Hi {name}! I just found a property that perfectly matches your requirements - a {bedrooms} bedroom {property_type} in {location} at {price}. Would you like to schedule a viewing? 🏠</p>
+                <div class="template-tags">
+                    <span class="template-tag">Real Estate</span>
+                    <span class="template-tag">Recommendation</span>
+                </div>
+            </div>
+
+            <!-- Template 5 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">🎉</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">Deal Closed - Congratulations</h3>
+                <p class="template-preview">🎉 Congratulations {name}! I'm thrilled to have helped you find your perfect home at {property_name}. Wishing you all the happiness in your new space! If you ever need anything, I'm just a message away.</p>
+                <div class="template-tags">
+                    <span class="template-tag">Celebration</span>
+                    <span class="template-tag">Closing</span>
+                </div>
+            </div>
+
+            <!-- Template 6 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">⏰</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">Re-Engagement</h3>
+                <p class="template-preview">Hi {name}! It's been a while since we connected. I wanted to check in and see if you're still looking for properties? The market has some exciting new options that might interest you! 🏡</p>
+                <div class="template-tags">
+                    <span class="template-tag">Follow-Up</span>
+                    <span class="template-tag">Re-engage</span>
+                </div>
+            </div>
+
+            <!-- Template 7 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">📋</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">Budget Inquiry</h3>
+                <p class="template-preview">Hi {name}! To help you find the perfect property, could you share your budget range and preferred locations? This will help me curate the best options for you. 💎</p>
+                <div class="template-tags">
+                    <span class="template-tag">Inquiry</span>
+                    <span class="template-tag">Qualifying</span>
+                </div>
+            </div>
+
+            <!-- Template 8 -->
+            <div class="template-card" onclick="showToast('📋 Copied to clipboard!')">
+                <div class="template-header">
+                    <div class="template-icon">🌟</div>
+                    <div class="template-actions">
+                        <button class="template-action" onclick="event.stopPropagation()">✏️</button>
+                        <button class="template-action" onclick="event.stopPropagation()">🗑️</button>
+                    </div>
+                </div>
+                <h3 class="template-title">Request for Referral</h3>
+                <p class="template-preview">Hi {name}! I hope you're enjoying your new home! If you know anyone looking for properties, I'd be grateful for a referral. Your trust means everything to me. 🙏✨</p>
+                <div class="template-tags">
+                    <span class="template-tag">Referral</span>
+                    <span class="template-tag">Post-Sale</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Template Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">✨ Create Template</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Template Name</label>
+                <input type="text" class="form-input" placeholder="e.g., Follow-Up After Viewing">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Category</label>
+                <select class="form-select">
+                    <option>Real Estate</option>
+                    <option>Welcome</option>
+                    <option>Follow-Up</option>
+                    <option>Celebration</option>
+                    <option>Inquiry</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Message Content</label>
+                <textarea class="form-textarea" placeholder="Type your template message here..."></textarea>
+                <p class="variable-hint">Click variables to insert:</p>
+                <div class="variable-tags">
+                    <span class="variable-tag">{name}</span>
+                    <span class="variable-tag">{property_name}</span>
+                    <span class="variable-tag">{property_type}</span>
+                    <span class="variable-tag">{location}</span>
+                    <span class="variable-tag">{price}</span>
+                    <span class="variable-tag">{date}</span>
+                    <span class="variable-tag">{time}</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="closeModal(); showToast('✨ Template created!')">Create Template</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✨ Saved!</div>
+
+    <script>
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Close modal on overlay click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>

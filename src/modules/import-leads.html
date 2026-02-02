@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Import Leads | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --success: #7cb87c;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2.5rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p { color: var(--text-muted); }
+
+        /* Upload Zone */
+        .upload-zone {
+            background: var(--bg-secondary);
+            border: 2px dashed var(--gold-light);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover, .upload-zone.drag-over {
+            border-color: var(--gold-primary);
+            background: var(--gold-light);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .upload-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-btn:hover { background: var(--gold-primary); }
+
+        .upload-formats {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Divider */
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border-light);
+        }
+
+        .divider span {
+            padding: 0 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Manual Form */
+        .manual-form {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .form-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.875rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: var(--bg-primary);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            background: var(--bg-secondary);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: white;
+        }
+
+        .btn-primary:hover { background: var(--gold-primary); }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+        }
+
+        /* Template Download */
+        .template-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--gold-light);
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .template-download a {
+            color: var(--gold-dark);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .template-download a:hover {
+            text-decoration: underline;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 12px;
+            font-weight: 500;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show { transform: translateY(0); opacity: 1; }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .container { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>👥 Import Leads</h1>
+            <p>Add new leads to your pipeline</p>
+        </div>
+
+        <!-- Upload Zone -->
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📁</div>
+            <h3 class="upload-title">Drag & drop your file here</h3>
+            <p class="upload-subtitle">or click to browse your computer</p>
+            <button class="upload-btn">📤 Choose File</button>
+            <p class="upload-formats">Supported: CSV, Excel (.xlsx)</p>
+            <input type="file" id="fileInput" accept=".csv,.xlsx" style="display:none" onchange="handleFileUpload(this)">
+        </div>
+
+        <div class="template-download">
+            📥 Need a template? <a href="#" onclick="downloadTemplate()">Download CSV Template</a>
+        </div>
+
+        <div class="divider"><span>or add manually</span></div>
+
+        <!-- Manual Entry Form -->
+        <div class="manual-form">
+            <h3 class="form-title">✍️ Add Lead Manually</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" class="form-input" id="leadName" placeholder="e.g., Sarah Mitchell">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <input type="tel" class="form-input" id="leadPhone" placeholder="+20 100 123 4567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="leadEmail" placeholder="sarah@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lead Source</label>
+                    <select class="form-select" id="leadSource">
+                        <option value="">Select source...</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="referral">Referral</option>
+                        <option value="website">Website</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Property Interest</label>
+                    <select class="form-select" id="propertyType">
+                        <option value="">Select type...</option>
+                        <option value="villa">Villa</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="penthouse">Penthouse</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="commercial">Commercial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Budget Range</label>
+                    <select class="form-select" id="budget">
+                        <option value="">Select range...</option>
+                        <option value="under-500k">Under $500K</option>
+                        <option value="500k-1m">$500K - $1M</option>
+                        <option value="1m-2m">$1M - $2M</option>
+                        <option value="2m-plus">$2M+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Preferred Location</label>
+                    <input type="text" class="form-input" id="location" placeholder="e.g., New Cairo, Palm Hills">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Lead Temperature</label>
+                    <select class="form-select" id="temperature">
+                        <option value="new">🆕 New</option>
+                        <option value="warm">🌡️ Warm</option>
+                        <option value="hot">🔥 Hot</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Notes</label>
+                    <textarea class="form-textarea" id="notes" placeholder="Any additional details about this lead..."></textarea>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                <button class="btn btn-primary" onclick="saveLead()">✨ Add Lead</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">✨ Lead added!</div>
+
+    <script>
+        const uploadZone = document.getElementById('uploadZone');
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-over');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) processFile(file);
+        });
+
+        function handleFileUpload(input) {
+            const file = input.files[0];
+            if (file) processFile(file);
+        }
+
+        function processFile(file) {
+            showToast(`📁 Processing ${file.name}...`);
+            setTimeout(() => {
+                showToast(`✅ 15 leads imported from ${file.name}`);
+            }, 1500);
+        }
+
+        function downloadTemplate() {
+            const csv = 'Name,Phone,Email,Property Type,Budget,Location,Temperature,Notes\nSarah Mitchell,+20 100 123 4567,sarah@email.com,Villa,$500K-$1M,New Cairo,Hot,Interested in 4BR';
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'leads_template.csv';
+            a.click();
+            showToast('📥 Template downloaded!');
+        }
+
+        function saveLead() {
+            const name = document.getElementById('leadName').value;
+            if (!name) {
+                showToast('⚠️ Please enter a name');
+                return;
+            }
+            showToast(`✨ ${name} added to pipeline!`);
+            clearForm();
+        }
+
+        function clearForm() {
+            document.querySelectorAll('.form-input, .form-textarea').forEach(el => el.value = '');
+            document.querySelectorAll('.form-select').forEach(el => el.selectedIndex = 0);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
