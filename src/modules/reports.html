@@ -24,7 +24,61 @@
             --border-light: rgba(0, 0, 0, 0.06);
             --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
             --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.08);
+        /* ============ DARK MODE ============ */
+        /* ============ DARK MODE ============ */
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-card: #2a2a2a;
+            --gold-primary: #d4b896;
+            --gold-dark: #c9a87c;
+            --gold-light: #3d3528;
+            --sage: #9aab8c;
+            --terracotta: #d49570;
+            --rose: #e0b5b5;
+            --charcoal: #f5f5f5;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --success: #8bc88b;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
+        *, *::before, *::after { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+        .theme-toggle { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: var(--shadow-medium); z-index: 1000; transition: transform 0.3s ease; }
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg); }        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-card: #2a2a2a;
+            --bg-sidebar: #1e1e1e;
+            --gold-primary: #d4b896;
+            --gold-dark: #c9a87c;
+            --gold-light: #3d3528;
+            --sage: #9aab8c;
+            --terracotta: #d49570;
+            --rose: #e0b5b5;
+            --charcoal: #f5f5f5;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --success: #8bc88b;
+            --danger: #e09090;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+        *, *::before, *::after { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+        .theme-toggle { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: var(--shadow-medium); z-index: 1000; transition: transform 0.3s ease; }
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg); }}
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -466,5 +520,23 @@
             </div>
         </div>
     </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ecc-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('ecc-theme', newTheme);
+        }
+        initTheme();
+    </script>
 </body>
 </html>
