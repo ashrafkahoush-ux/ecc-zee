@@ -455,14 +455,15 @@
                         <span>🧠</span>
                         <span>EMMA</span>
                     </div>
-                    <div class="message-content">Hello Zee! 👋 I'm EMMA, your AI copilot for luxury real estate excellence.
+                    <div class="message-content">Hello Zee! 👋 I'm EMMA — your Executive Meta Mind Advisor.
 
-I can help you with:
-• 🔥 Analyzing your hot leads
-• ✉️ Drafting personalized client messages
-• 🏠 Property matching insights
-• 📊 Pipeline analysis & projections
-• 📋 Task prioritization
+I'm here to help you excel in luxury real estate. Here's what I can do for you:
+
+• 🔥 Analyze and prioritize your hottest leads
+• ✉️ Draft personalized client messages
+• 🏠 Match properties to client preferences
+• 📊 Review your pipeline and projections
+• 📋 Manage tasks and follow-ups
 
 What would you like to focus on today?</div>
                 </div>
@@ -662,6 +663,18 @@ What would you like to focus on today?</div>
 
         function getLocalFallback(message) {
             const lower = message.toLowerCase();
+            
+            if (lower.includes('hello') || lower.includes('hi ') || lower === 'hi' || lower.includes('hey')) {
+                return `Hello Zee! 👋 I'm EMMA — your Executive Meta Mind Advisor.
+
+I'm here to help you excel in luxury real estate. What can I assist you with today?
+
+• 🔥 Analyze your hot leads
+• ✉️ Draft personalized messages
+• 🏠 Property matching
+• 📊 Pipeline review
+• 📋 Task management`;
+            }
             
             if (lower.includes('hot lead') || lower.includes('lead')) {
                 return `🔥 **Your Hot Leads:**

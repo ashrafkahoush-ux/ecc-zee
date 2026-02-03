@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Pipeline | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --success: #7cb87c;
+            --warning: #e6b85c;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --gold-primary: #d4b896;
+            --gold-dark: #c9a87c;
+            --gold-light: #3d3528;
+            --sage: #9aab8c;
+            --terracotta: #d49570;
+            --rose: #e0b5b5;
+            --charcoal: #f5f5f5;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --success: #8bc88b;
+            --warning: #f0c56c;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        *, *::before, *::after { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; box-sizing: border-box; }
+        * { margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: white;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-medium); }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        /* Pipeline Board */
+        .pipeline-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .pipeline-column {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-light);
+            min-height: 500px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--column-color, var(--gold-primary));
+        }
+
+        .column-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .column-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--column-color, var(--gold-primary));
+        }
+
+        .column-count {
+            background: var(--bg-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .column-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .lead-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lead-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-soft);
+            border-color: var(--gold-primary);
+        }
+
+        .lead-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .lead-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .lead-tag {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+        }
+
+        .lead-tag.hot { background: linear-gradient(135deg, #f8d7da, #f5c6cb); color: #c17f59; }
+        .lead-tag.warm { background: linear-gradient(135deg, #fff3cd, #ffeeba); color: #a88a5c; }
+        .lead-tag.new { background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #7cb87c; }
+
+        .lead-property {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .lead-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lead-value {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--gold-dark);
+            font-size: 0.95rem;
+        }
+
+        .lead-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Stats Summary */
+        .stats-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--gold-primary);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: var(--shadow-medium); z-index: 1000; }
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg); }
+
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 0.9rem 1.25rem; background: var(--charcoal); color: white; border-radius: 12px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 1000; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 1000px) {
+            .pipeline-board { grid-template-columns: repeat(2, 1fr); }
+            .stats-summary { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .pipeline-board { grid-template-columns: 1fr; }
+            .stats-summary { grid-template-columns: 1fr; }
+            body { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+
+        <div class="page-header">
+            <h1 class="page-title">🎯 Sales Pipeline</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="showToast('📊 Report generated!')">Generate Report</button>
+                <button class="btn btn-primary" onclick="showToast('✨ Add Lead form coming soon!')">+ Add Lead</button>
+            </div>
+        </div>
+
+        <div class="stats-summary">
+            <div class="stat-box">
+                <div class="stat-value">12</div>
+                <div class="stat-label">Total Leads</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">$27.4M</div>
+                <div class="stat-label">Pipeline Value</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Hot Leads</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">$548K</div>
+                <div class="stat-label">Est. Commission</div>
+            </div>
+        </div>
+
+        <div class="pipeline-board">
+            <!-- New Leads -->
+            <div class="pipeline-column" style="--column-color: var(--sage);">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="column-dot"></span>
+                        New Lead
+                    </div>
+                    <span class="column-count">3</span>
+                </div>
+                <div class="column-cards">
+                    <div class="lead-card" onclick="showToast('Opening Sarah Mitchell...')">
+                        <div class="lead-header">
+                            <span class="lead-name">Sarah Mitchell</span>
+                            <span class="lead-tag hot">HOT</span>
+                        </div>
+                        <div class="lead-property">Villa • Emirates Hills</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$2,400,000</span>
+                            <span class="lead-date">2h ago</span>
+                        </div>
+                    </div>
+                    <div class="lead-card" onclick="showToast('Opening Ahmed Hassan...')">
+                        <div class="lead-header">
+                            <span class="lead-name">Ahmed Hassan</span>
+                            <span class="lead-tag new">NEW</span>
+                        </div>
+                        <div class="lead-property">Penthouse • Dubai Marina</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$1,800,000</span>
+                            <span class="lead-date">5h ago</span>
+                        </div>
+                    </div>
+                    <div class="lead-card" onclick="showToast('Opening James Wilson...')">
+                        <div class="lead-header">
+                            <span class="lead-name">James Wilson</span>
+                            <span class="lead-tag new">NEW</span>
+                        </div>
+                        <div class="lead-property">Apartment • Downtown</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$950,000</span>
+                            <span class="lead-date">1d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qualified -->
+            <div class="pipeline-column" style="--column-color: var(--gold-primary);">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="column-dot"></span>
+                        Qualified
+                    </div>
+                    <span class="column-count">4</span>
+                </div>
+                <div class="column-cards">
+                    <div class="lead-card" onclick="showToast('Opening Omar Al-Rashid...')">
+                        <div class="lead-header">
+                            <span class="lead-name">Omar Al-Rashid</span>
+                            <span class="lead-tag warm">WARM</span>
+                        </div>
+                        <div class="lead-property">Villa • Palm Jumeirah</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$5,200,000</span>
+                            <span class="lead-date">3d ago</span>
+                        </div>
+                    </div>
+                    <div class="lead-card" onclick="showToast('Opening Fatima Al-Maktoum...')">
+                        <div class="lead-header">
+                            <span class="lead-name">Fatima Al-Maktoum</span>
+                            <span class="lead-tag hot">HOT</span>
+                        </div>
+                        <div class="lead-property">Penthouse • DIFC</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$3,100,000</span>
+                            <span class="lead-date">2d ago</span>
+                        </div>
+                    </div>
+                    <div class="lead-card">
+                        <div class="lead-header">
+                            <span class="lead-name">Robert Chen</span>
+                            <span class="lead-tag warm">WARM</span>
+                        </div>
+                        <div class="lead-property">Apartment • JBR</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$1,250,000</span>
+                            <span class="lead-date">4d ago</span>
+                        </div>
+                    </div>
+                    <div class="lead-card">
+                        <div class="lead-header">
+                            <span class="lead-name">Lisa Thompson</span>
+                            <span class="lead-tag warm">WARM</span>
+                        </div>
+                        <div class="lead-property">Townhouse • Arabian Ranches</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$1,800,000</span>
+                            <span class="lead-date">5d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Viewing Scheduled -->
+            <div class="pipeline-column" style="--column-color: var(--terracotta);">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="column-dot"></span>
+                        Viewing
+                    </div>
+                    <span class="column-count">3</span>
+                </div>
+                <div class="column-cards">
+                    <div class="lead-card" onclick="showToast('Opening Khalid bin Saeed...')">
+                        <div class="lead-header">
+                            <span class="lead-name">Khalid bin Saeed</span>
+                            <span class="lead-tag hot">HOT</span>
+                        </div>
+                        <div class="lead-property">Villa • Jumeirah Golf Estates</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$4,500,000</span>
+                            <span class="lead-date">Tomorrow 2PM</span>
+                        </div>
+                    </div>
+                    <div class="lead-card">
+                        <div class="lead-header">
+                            <span class="lead-name">Maria Santos</span>
+                            <span class="lead-tag warm">WARM</span>
+                        </div>
+                        <div class="lead-property">Apartment • Business Bay</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$890,000</span>
+                            <span class="lead-date">Wed 10AM</span>
+                        </div>
+                    </div>
+                    <div class="lead-card">
+                        <div class="lead-header">
+                            <span class="lead-name">David Park</span>
+                            <span class="lead-tag warm">WARM</span>
+                        </div>
+                        <div class="lead-property">Penthouse • Marina Gate</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$2,100,000</span>
+                            <span class="lead-date">Thu 4PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Negotiation -->
+            <div class="pipeline-column" style="--column-color: var(--rose);">
+                <div class="column-header">
+                    <div class="column-title">
+                        <span class="column-dot"></span>
+                        Negotiation
+                    </div>
+                    <span class="column-count">2</span>
+                </div>
+                <div class="column-cards">
+                    <div class="lead-card" onclick="showToast('Opening Rashid Al-Nahyan...')">
+                        <div class="lead-header">
+                            <span class="lead-name">Rashid Al-Nahyan</span>
+                            <span class="lead-tag hot">HOT</span>
+                        </div>
+                        <div class="lead-property">Mansion • Emirates Hills</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$8,500,000</span>
+                            <span class="lead-date">Offer pending</span>
+                        </div>
+                    </div>
+                    <div class="lead-card">
+                        <div class="lead-header">
+                            <span class="lead-name">Sophie Laurent</span>
+                            <span class="lead-tag hot">HOT</span>
+                        </div>
+                        <div class="lead-property">Villa • Al Barari</div>
+                        <div class="lead-footer">
+                            <span class="lead-value">$4,200,000</span>
+                            <span class="lead-date">Counter offer</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ecc-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('ecc-theme', newTheme);
+        }
+        initTheme();
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

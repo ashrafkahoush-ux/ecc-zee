@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks | ECC Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --sage: #8b9a7d;
+            --terracotta: #c17f59;
+            --rose: #d4a5a5;
+            --charcoal: #2d2d2d;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --success: #7cb87c;
+            --warning: #e6b85c;
+            --danger: #d47c7c;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --gold-primary: #d4b896;
+            --gold-dark: #c9a87c;
+            --gold-light: #3d3528;
+            --sage: #9aab8c;
+            --terracotta: #d49570;
+            --rose: #e0b5b5;
+            --charcoal: #f5f5f5;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --success: #8bc88b;
+            --warning: #f0c56c;
+            --danger: #e08a8a;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        *, *::before, *::after { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; box-sizing: border-box; }
+        * { margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gold-primary);
+            text-decoration: none;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .back-link:hover { color: var(--gold-dark); }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: white;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-medium); }
+
+        /* Task Filters */
+        .task-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            border-color: var(--gold-primary);
+            color: var(--gold-primary);
+            background: var(--gold-light);
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--border-light);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .stat-number.overdue { color: var(--danger); }
+        .stat-number.today { color: var(--terracotta); }
+        .stat-number.upcoming { color: var(--gold-primary); }
+        .stat-number.completed { color: var(--success); }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Task List */
+        .task-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .task-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.2s;
+        }
+
+        .task-item:hover {
+            border-color: var(--gold-primary);
+            transform: translateX(4px);
+        }
+
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-light);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:hover {
+            border-color: var(--gold-primary);
+        }
+
+        .task-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .task-content {
+            flex: 1;
+        }
+
+        .task-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .task-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .task-priority {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-high { background: rgba(212, 124, 124, 0.15); color: var(--danger); }
+        .priority-medium { background: rgba(230, 184, 92, 0.15); color: var(--warning); }
+        .priority-low { background: rgba(139, 154, 125, 0.15); color: var(--sage); }
+
+        /* Theme Toggle */
+        .theme-toggle { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark)); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: var(--shadow-medium); z-index: 1000; }
+        .theme-toggle:hover { transform: scale(1.1) rotate(15deg); }
+        .theme-toggle .icon-sun, .theme-toggle .icon-moon { position: absolute; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 1; transform: rotate(0deg); }
+
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); padding: 0.9rem 1.25rem; background: var(--charcoal); color: white; border-radius: 12px; font-weight: 500; opacity: 0; transition: all 0.3s; z-index: 1000; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            body { padding: 1rem; }
+            .task-item { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+
+        <div class="page-header">
+            <h1 class="page-title">✓ Tasks</h1>
+            <button class="btn btn-primary" onclick="showToast('✨ Add Task form coming soon!')">+ Add Task</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-number overdue">2</div>
+                <div class="stat-label">Overdue</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number today">5</div>
+                <div class="stat-label">Due Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number upcoming">8</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number completed">12</div>
+                <div class="stat-label">Completed</div>
+            </div>
+        </div>
+
+        <div class="task-filters">
+            <button class="filter-btn active" onclick="filterTasks('all', this)">All Tasks</button>
+            <button class="filter-btn" onclick="filterTasks('today', this)">Today</button>
+            <button class="filter-btn" onclick="filterTasks('week', this)">This Week</button>
+            <button class="filter-btn" onclick="filterTasks('overdue', this)">Overdue</button>
+            <button class="filter-btn" onclick="filterTasks('completed', this)">Completed</button>
+        </div>
+
+        <!-- Overdue Tasks -->
+        <div class="task-section" data-section="overdue">
+            <div class="section-title">⚠️ Overdue</div>
+            <div class="task-list">
+                <div class="task-item" data-category="overdue">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Follow up with Ahmed Hassan - Second viewing</div>
+                        <div class="task-meta">
+                            <span>📅 Yesterday</span>
+                            <span>👤 Ahmed Hassan</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-high">High</span>
+                </div>
+                <div class="task-item" data-category="overdue">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Send property comparison to James Wilson</div>
+                        <div class="task-meta">
+                            <span>📅 2 days ago</span>
+                            <span>👤 James Wilson</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-medium">Medium</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Tasks -->
+        <div class="task-section" data-section="today">
+            <div class="section-title">📌 Today</div>
+            <div class="task-list">
+                <div class="task-item" data-category="today">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Prepare for viewing with Khalid bin Saeed (2PM)</div>
+                        <div class="task-meta">
+                            <span>🏠 Jumeirah Golf Estates Villa</span>
+                            <span>💰 $4.5M</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-high">High</span>
+                </div>
+                <div class="task-item" data-category="today">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Call Fatima Al-Maktoum - Discuss DIFC penthouse offer</div>
+                        <div class="task-meta">
+                            <span>📞 Phone call</span>
+                            <span>💰 $3.1M</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-high">High</span>
+                </div>
+                <div class="task-item" data-category="today">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Send market update newsletter to warm leads</div>
+                        <div class="task-meta">
+                            <span>✉️ Email</span>
+                            <span>👥 5 recipients</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-medium">Medium</span>
+                </div>
+                <div class="task-item" data-category="today">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Review contract terms for Rashid Al-Nahyan deal</div>
+                        <div class="task-meta">
+                            <span>📄 Legal</span>
+                            <span>💰 $8.5M</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-high">High</span>
+                </div>
+                <div class="task-item" data-category="today">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Update CRM with new lead information</div>
+                        <div class="task-meta">
+                            <span>💻 Admin</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-low">Low</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Tasks -->
+        <div class="task-section" data-section="week">
+            <div class="section-title">📅 This Week</div>
+            <div class="task-list">
+                <div class="task-item" data-category="week">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Viewing with Maria Santos - Business Bay (Wed 10AM)</div>
+                        <div class="task-meta">
+                            <span>🏠 Business Bay Apartment</span>
+                            <span>💰 $890K</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-medium">Medium</span>
+                </div>
+                <div class="task-item" data-category="week">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Viewing with David Park - Marina Gate (Thu 4PM)</div>
+                        <div class="task-meta">
+                            <span>🏠 Marina Gate Penthouse</span>
+                            <span>💰 $2.1M</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-medium">Medium</span>
+                </div>
+                <div class="task-item" data-category="week">
+                    <div class="task-checkbox" onclick="toggleTask(this)"></div>
+                    <div class="task-content">
+                        <div class="task-title">Prepare weekly performance report</div>
+                        <div class="task-meta">
+                            <span>📊 Report</span>
+                            <span>📅 Friday</span>
+                        </div>
+                    </div>
+                    <span class="task-priority priority-low">Low</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Tasks -->
+        <div class="task-section" data-section="completed">
+            <div class="section-title">✅ Recently Completed</div>
+            <div class="task-list">
+                <div class="task-item completed" data-category="completed">
+                    <div class="task-checkbox checked" onclick="toggleTask(this)">✓</div>
+                    <div class="task-content">
+                        <div class="task-title">Initial call with Sarah Mitchell</div>
+                        <div class="task-meta">
+                            <span>✅ Completed today</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="task-item completed" data-category="completed">
+                    <div class="task-checkbox checked" onclick="toggleTask(this)">✓</div>
+                    <div class="task-content">
+                        <div class="task-title">Send listing brochure to Omar Al-Rashid</div>
+                        <div class="task-meta">
+                            <span>✅ Completed yesterday</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+        <span class="icon-sun">☀️</span>
+        <span class="icon-moon">🌙</span>
+    </button>
+
+    <script>
+        function initTheme() {
+            const savedTheme = localStorage.getItem('ecc-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('ecc-theme', newTheme);
+        }
+        initTheme();
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function toggleTask(checkbox) {
+            const taskItem = checkbox.closest('.task-item');
+            if (checkbox.classList.contains('checked')) {
+                checkbox.classList.remove('checked');
+                checkbox.textContent = '';
+                taskItem.classList.remove('completed');
+                showToast('Task marked as incomplete');
+            } else {
+                checkbox.classList.add('checked');
+                checkbox.textContent = '✓';
+                taskItem.classList.add('completed');
+                showToast('✅ Task completed!');
+            }
+        }
+
+        function filterTasks(category, btn) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Filter sections
+            const sections = document.querySelectorAll('.task-section');
+            sections.forEach(section => {
+                if (category === 'all') {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = section.dataset.section === category ? 'block' : 'none';
+                }
+            });
+
+            showToast(`Showing ${category === 'all' ? 'all tasks' : category + ' tasks'}`);
+        }
+    </script>
+</body>
+</html>
