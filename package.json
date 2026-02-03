@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "ECC Command Center - Elegant Edition for Zee Benzarrougue",
   "private": true,
-  "engines": {
-    "node": "20.x"
-  },
   "scripts": {
     "start": "npx serve .",
     "dev": "npx serve . -l 3000"
