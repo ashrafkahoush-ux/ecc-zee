@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMMA Academy | Command Center Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #faf9f7;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --gold-primary: #c9a87c;
+            --gold-dark: #a88a5c;
+            --gold-light: #e6d5b8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --border-light: rgba(0, 0, 0, 0.06);
+            --border-warm: rgba(201, 168, 124, 0.3);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --shadow-gold: 0 4px 20px rgba(201, 168, 124, 0.2);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #242424;
+            --bg-card: #2a2a2a;
+            --gold-primary: #d4b896;
+            --gold-dark: #c9a87c;
+            --gold-light: #3d3528;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-warm: rgba(212, 184, 150, 0.2);
+            --shadow-soft: 0 4px 30px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.4);
+            --shadow-gold: 0 4px 20px rgba(212, 184, 150, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ============ HEADER ============ */
+        .academy-header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--gold-light) 100%);
+            padding: 60px 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-warm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .academy-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(201, 168, 124, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(201, 168, 124, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--gold-primary);
+        }
+
+        .academy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .academy-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .academy-title span {
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .academy-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ============ PROGRESS BAR ============ */
+        .progress-section {
+            max-width: 800px;
+            margin: -30px auto 40px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .progress-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-warm);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-percent {
+            color: var(--gold-primary);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: var(--bg-primary);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-primary), var(--gold-dark));
+            border-radius: 100px;
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        /* ============ MODULES GRID ============ */
+        .modules-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--gold-primary);
+        }
+
+        .module-card.completed {
+            border-color: #7cb87c;
+        }
+
+        .module-header {
+            padding: 24px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .module-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .module-icon.dashboard { background: linear-gradient(135deg, #c9a87c20, #c9a87c40); }
+        .module-icon.pipeline { background: linear-gradient(135deg, #7cacb820, #7cacb840); }
+        .module-icon.emma { background: linear-gradient(135deg, #9b59b620, #9b59b640); }
+        .module-icon.templates { background: linear-gradient(135deg, #e67e2220, #e67e2240); }
+        .module-icon.tasks { background: linear-gradient(135deg, #27ae6020, #27ae6040); }
+        .module-icon.reports { background: linear-gradient(135deg, #3498db20, #3498db40); }
+        .module-icon.settings { background: linear-gradient(135deg, #95a5a620, #95a5a640); }
+        .module-icon.leads { background: linear-gradient(135deg, #e74c3c20, #e74c3c40); }
+
+        .module-info {
+            flex: 1;
+        }
+
+        .module-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .module-status {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-weight: 600;
+        }
+
+        .module-status.new {
+            background: var(--gold-light);
+            color: var(--gold-dark);
+        }
+
+        .module-status.completed {
+            background: rgba(124, 184, 124, 0.2);
+            color: #7cb87c;
+        }
+
+        .module-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .module-content {
+            padding: 0 24px 24px;
+            display: none;
+        }
+
+        .module-card.expanded .module-content {
+            display: block;
+        }
+
+        .step-list {
+            list-style: none;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--gold-dark);
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .step-text strong {
+            color: var(--text-primary);
+        }
+
+        .module-footer {
+            padding: 16px 24px;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .module-action {
+            padding: 10px 20px;
+            background: var(--gold-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .module-action:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+        }
+
+        /* ============ TIPS SECTION ============ */
+        .tips-section {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid var(--border-warm);
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .tip-card {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .tip-card:hover {
+            background: var(--gold-light);
+        }
+
+        .tip-icon {
+            font-size: 2rem;
+        }
+
+        .tip-content h4 {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .tip-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* ============ KEYBOARD SHORTCUTS ============ */
+        .shortcuts-section {
+            margin-top: 48px;
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-light);
+        }
+
+        .shortcut-action {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .shortcut-keys {
+            display: flex;
+            gap: 6px;
+        }
+
+        .key {
+            padding: 6px 12px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        /* ============ CONTACT SECTION ============ */
+        .contact-section {
+            margin-top: 48px;
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, var(--gold-light), rgba(201, 168, 124, 0.1));
+            border-radius: 20px;
+            border: 1px solid var(--border-warm);
+        }
+
+        .contact-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .contact-text {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .contact-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--gold-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        /* ============ RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .academy-header { padding: 40px 20px; }
+            .academy-title { font-size: 2rem; }
+            .modules-container { padding: 0 16px 40px; }
+            .tips-section { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="academy-header">
+        <a href="../../index.html" class="back-link">← Back to Dashboard</a>
+        
+        <div class="academy-badge">🎓 Interactive Guide</div>
+        <h1 class="academy-title"><span>EMMA</span> Academy</h1>
+        <p class="academy-subtitle">
+            Master your Command Center in minutes. Learn how to leverage every feature 
+            to close more deals and delight your clients.
+        </p>
+    </header>
+
+    <!-- Progress Section -->
+    <section class="progress-section">
+        <div class="progress-card">
+            <div class="progress-header">
+                <span class="progress-title">🎯 Your Onboarding Progress</span>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules -->
+    <main class="modules-container">
+        <h2 class="section-title">📚 Learning Modules</h2>
+        
+        <div class="modules-grid">
+            <!-- Dashboard Module -->
+            <div class="module-card" data-module="dashboard">
+                <div class="module-header">
+                    <div class="module-icon dashboard">📊</div>
+                    <div class="module-info">
+                        <h3 class="module-title">
+                            Dashboard Overview
+                            <span class="module-status new">Start Here</span>
+                        </h3>
+                        <p class="module-desc">Your command center at a glance — stats, pipeline, and quick actions.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Stats Cards:</strong> View your total leads, response rate, viewings scheduled, and deals in negotiation at the top.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Pipeline Board:</strong> Drag and drop leads between stages — New Lead, Qualified, Viewing Scheduled, Negotiation.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Quick Actions:</strong> Use the action buttons to add leads, schedule viewings, or ask EMMA for help.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Recent Activity:</strong> Track all interactions, calls, and updates in the activity feed.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 3 min read</span>
+                    <a href="../../index.html" class="module-action">Open Dashboard →</a>
+                </div>
+            </div>
+
+            <!-- EMMA Copilot Module -->
+            <div class="module-card" data-module="emma">
+                <div class="module-header">
+                    <div class="module-icon emma">🧠</div>
+                    <div class="module-info">
+                        <h3 class="module-title">
+                            EMMA Copilot
+                            <span class="module-status new">AI Power</span>
+                        </h3>
+                        <p class="module-desc">Your Executive Meta Mind Advisor — AI-powered assistance for every task.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Say Hello:</strong> Start by greeting EMMA — she'll introduce herself and offer assistance.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Ask Anything:</strong> "Who are my hot leads?" • "Draft a follow-up for Ahmed" • "What should I do today?"</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Quick Actions:</strong> Use the preset buttons for common tasks like lead analysis or message drafting.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Voice Mode:</strong> Click the microphone to speak your questions (audio output coming soon!).</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 5 min read</span>
+                    <a href="emma-copilot.html" class="module-action">Talk to EMMA →</a>
+                </div>
+            </div>
+
+            <!-- Pipeline Module -->
+            <div class="module-card" data-module="pipeline">
+                <div class="module-header">
+                    <div class="module-icon pipeline">🎯</div>
+                    <div class="module-info">
+                        <h3 class="module-title">Pipeline Management</h3>
+                        <p class="module-desc">Visual sales pipeline with drag-and-drop lead tracking.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>4 Stages:</strong> New Lead → Qualified → Viewing Scheduled → Negotiation</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Lead Cards:</strong> Each card shows name, property interest, value, and temperature (Hot/Warm/New).</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Move Leads:</strong> Drag cards between columns as leads progress through your funnel.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Pipeline Stats:</strong> See total value, expected commissions, and conversion rates at the top.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 4 min read</span>
+                    <a href="pipeline.html" class="module-action">View Pipeline →</a>
+                </div>
+            </div>
+
+            <!-- Tasks Module -->
+            <div class="module-card" data-module="tasks">
+                <div class="module-header">
+                    <div class="module-icon tasks">✓</div>
+                    <div class="module-info">
+                        <h3 class="module-title">Task Management</h3>
+                        <p class="module-desc">Stay organized with smart task tracking and reminders.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Filters:</strong> View All tasks, Today's tasks, This Week, Overdue, or Completed.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Task Cards:</strong> Each task shows priority, due date, and related lead/property.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Quick Complete:</strong> Click the checkbox to mark tasks done instantly.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Add New:</strong> Click "+ New Task" to create tasks linked to your leads.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 3 min read</span>
+                    <a href="tasks.html" class="module-action">View Tasks →</a>
+                </div>
+            </div>
+
+            <!-- Templates Module -->
+            <div class="module-card" data-module="templates">
+                <div class="module-header">
+                    <div class="module-icon templates">💬</div>
+                    <div class="module-info">
+                        <h3 class="module-title">Message Templates</h3>
+                        <p class="module-desc">Pre-written messages for every client interaction.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Categories:</strong> Browse templates by type — First Contact, Follow-up, Viewing, Negotiation, etc.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Preview & Copy:</strong> View any template and copy it with one click.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Personalize:</strong> Replace [CLIENT NAME] and [PROPERTY] with actual details.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>AI Enhancement:</strong> Ask EMMA to customize any template for your specific client.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 4 min read</span>
+                    <a href="../../templates/message-templates.html" class="module-action">Browse Templates →</a>
+                </div>
+            </div>
+
+            <!-- Import Leads Module -->
+            <div class="module-card" data-module="leads">
+                <div class="module-header">
+                    <div class="module-icon leads">👥</div>
+                    <div class="module-info">
+                        <h3 class="module-title">Import Leads</h3>
+                        <p class="module-desc">Bulk import leads from CSV files or other CRMs.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Prepare CSV:</strong> Export your leads with columns: Name, Email, Phone, Property Interest, Value.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Upload:</strong> Drag and drop your CSV file or click to browse.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Map Fields:</strong> Match your columns to the system fields.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Review & Import:</strong> Check the preview and click Import to add all leads.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 5 min read</span>
+                    <a href="import-leads.html" class="module-action">Import Leads →</a>
+                </div>
+            </div>
+
+            <!-- Reports Module -->
+            <div class="module-card" data-module="reports">
+                <div class="module-header">
+                    <div class="module-icon reports">📈</div>
+                    <div class="module-info">
+                        <h3 class="module-title">Reports & Analytics</h3>
+                        <p class="module-desc">Track performance with visual reports and insights.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Dashboard:</strong> See key metrics — conversion rate, average deal size, response time.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Filters:</strong> Filter by date range — This Week, Month, Quarter, Year.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Charts:</strong> Visual graphs show pipeline trends and activity patterns.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Export:</strong> Download reports as PDF for meetings or records.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 3 min read</span>
+                    <a href="reports.html" class="module-action">View Reports →</a>
+                </div>
+            </div>
+
+            <!-- Settings Module -->
+            <div class="module-card" data-module="settings">
+                <div class="module-header">
+                    <div class="module-icon settings">⚙️</div>
+                    <div class="module-info">
+                        <h3 class="module-title">Settings & Profile</h3>
+                        <p class="module-desc">Customize your Command Center experience.</p>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <span class="step-text"><strong>Profile:</strong> Update your name, photo, and contact details.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <span class="step-text"><strong>Theme:</strong> Toggle between Light and Dark mode using the sun/moon button.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <span class="step-text"><strong>Notifications:</strong> Configure email and push notification preferences.</span>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">4</span>
+                            <span class="step-text"><strong>Integrations:</strong> Connect your email, calendar, and social accounts.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="module-footer">
+                    <span class="module-time">⏱️ 2 min read</span>
+                    <a href="settings.html" class="module-action">Open Settings →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tips Section -->
+        <section class="tips-section">
+            <h2 class="section-title">💡 Pro Tips from Top Performers</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <span class="tip-icon">🌅</span>
+                    <div class="tip-content">
+                        <h4>Morning Routine</h4>
+                        <p>Start each day by asking EMMA "What should I focus on today?" for prioritized tasks.</p>
+                    </div>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">⚡</span>
+                    <div class="tip-content">
+                        <h4>Speed to Lead</h4>
+                        <p>Respond to new leads within 5 minutes using templates to increase conversion by 400%.</p>
+                    </div>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">🎯</span>
+                    <div class="tip-content">
+                        <h4>Follow the Hot</h4>
+                        <p>Focus on "Hot" leads first — they're most likely to convert in the next 48 hours.</p>
+                    </div>
+                </div>
+                <div class="tip-card">
+                    <span class="tip-icon">📱</span>
+                    <div class="tip-content">
+                        <h4>Personal Touch</h4>
+                        <p>Always personalize templates with specific property details and client interests.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Keyboard Shortcuts -->
+        <section class="shortcuts-section">
+            <h2 class="section-title">⌨️ Keyboard Shortcuts</h2>
+            <div class="shortcuts-grid">
+                <div class="shortcut-item">
+                    <span class="shortcut-action">Toggle Dark Mode</span>
+                    <div class="shortcut-keys"><span class="key">D</span></div>
+                </div>
+                <div class="shortcut-item">
+                    <span class="shortcut-action">Open EMMA</span>
+                    <div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">E</span></div>
+                </div>
+                <div class="shortcut-item">
+                    <span class="shortcut-action">New Lead</span>
+                    <div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">N</span></div>
+                </div>
+                <div class="shortcut-item">
+                    <span class="shortcut-action">Search</span>
+                    <div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">K</span></div>
+                </div>
+                <div class="shortcut-item">
+                    <span class="shortcut-action">Go to Pipeline</span>
+                    <div class="shortcut-keys"><span class="key">G</span><span class="key">P</span></div>
+                </div>
+                <div class="shortcut-item">
+                    <span class="shortcut-action">Go to Tasks</span>
+                    <div class="shortcut-keys"><span class="key">G</span><span class="key">T</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact-section">
+            <h2 class="contact-title">Need More Help?</h2>
+            <p class="contact-text">Our team is here to support your success. Reach out anytime!</p>
+            <a href="emma-copilot.html" class="contact-btn">
+                🧠 Ask EMMA for Help
+            </a>
+        </section>
+    </main>
+
+    <script>
+        // Initialize theme from localStorage
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        // Animate progress bar
+        setTimeout(() => {
+            const completed = localStorage.getItem('academyProgress') || 0;
+            document.getElementById('progressFill').style.width = completed + '%';
+            document.getElementById('progressPercent').textContent = completed + '%';
+        }, 500);
+
+        // Module card expansion
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.querySelector('.module-header').addEventListener('click', () => {
+                card.classList.toggle('expanded');
+                
+                // Track progress
+                const module = card.dataset.module;
+                const viewed = JSON.parse(localStorage.getItem('viewedModules') || '[]');
+                if (!viewed.includes(module)) {
+                    viewed.push(module);
+                    localStorage.setItem('viewedModules', JSON.stringify(viewed));
+                    
+                    // Update progress
+                    const progress = Math.round((viewed.length / 8) * 100);
+                    localStorage.setItem('academyProgress', progress);
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    document.getElementById('progressPercent').textContent = progress + '%';
+                }
+            });
+        });
+
+        // Mark viewed modules
+        const viewedModules = JSON.parse(localStorage.getItem('viewedModules') || '[]');
+        viewedModules.forEach(module => {
+            const card = document.querySelector(`[data-module="${module}"]`);
+            if (card) {
+                const status = card.querySelector('.module-status');
+                if (status) {
+                    status.textContent = '✓ Viewed';
+                    status.classList.remove('new');
+                    status.classList.add('completed');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
