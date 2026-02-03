@@ -25,7 +25,6 @@
             --shadow-medium: 0 10px 40px rgba(0, 0, 0, 0.08);
         }
 
-        /* ============ DARK MODE ============ */
         [data-theme="dark"] {
             --bg-primary: #1a1a1a;
             --bg-secondary: #242424;
@@ -66,7 +65,7 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -78,17 +77,16 @@
             gap: 0.5rem;
             color: var(--gold-primary);
             text-decoration: none;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             font-size: 0.9rem;
             font-weight: 500;
         }
 
         .back-link:hover { color: var(--gold-dark); }
 
-        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .emma-badge {
@@ -98,7 +96,7 @@
             background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
             padding: 0.5rem 1.25rem;
             border-radius: 50px;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .emma-badge span {
@@ -109,17 +107,43 @@
 
         .header h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.25rem;
+            font-size: 2rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
         .header p {
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        /* Chat Container */
+        .mode-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .mode-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .mode-dot.live { background: var(--success); }
+        .mode-dot.demo { background: var(--terracotta); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
         .chat-container {
             flex: 1;
             background: var(--bg-secondary);
@@ -128,12 +152,12 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-height: 500px;
+            min-height: 450px;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 1.5rem;
+            padding: 1.25rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
@@ -141,11 +165,11 @@
         }
 
         .message {
-            max-width: 80%;
+            max-width: 85%;
             padding: 1rem 1.25rem;
             border-radius: 18px;
             line-height: 1.6;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .message.emma {
@@ -171,10 +195,13 @@
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 0.5rem;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--gold-dark);
         }
+
+        .message-content { white-space: pre-wrap; }
+        .message-content strong { font-weight: 600; }
 
         .typing-indicator {
             display: none;
@@ -209,14 +236,13 @@
             40% { transform: translateY(-6px); }
         }
 
-        /* Audio Visualizer */
         .audio-visualizer {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 3px;
             height: 40px;
-            margin: 1rem 0;
+            margin: 0.75rem 0;
         }
 
         .audio-bar {
@@ -246,21 +272,20 @@
             height: 4px !important;
         }
 
-        /* Input Area */
         .chat-input-area {
-            padding: 1.25rem;
+            padding: 1rem;
             border-top: 1px solid var(--border-light);
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
             align-items: center;
         }
 
         .chat-input {
             flex: 1;
-            padding: 1rem 1.25rem;
+            padding: 0.9rem 1.25rem;
             border: 1px solid var(--border-light);
             border-radius: 25px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-family: inherit;
             background: var(--bg-primary);
             color: var(--text-primary);
@@ -271,73 +296,59 @@
             border-color: var(--gold-primary);
         }
 
-        .chat-input::placeholder {
-            color: var(--text-muted);
+        .chat-input::placeholder { color: var(--text-muted); }
+
+        .voice-btn, .send-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s;
         }
 
         .voice-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
             background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            transition: all 0.3s;
             box-shadow: 0 4px 15px rgba(201, 168, 124, 0.3);
         }
 
-        .voice-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(201, 168, 124, 0.4);
-        }
+        .voice-btn:hover { transform: scale(1.1); }
 
         .voice-btn.recording {
-            animation: pulse 1s infinite;
+            animation: recordPulse 1s infinite;
             background: linear-gradient(135deg, var(--terracotta), var(--rose));
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        @keyframes recordPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(193, 127, 89, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(193, 127, 89, 0); }
         }
 
         .send-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
             background: var(--charcoal);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
             color: white;
-            transition: all 0.3s;
         }
 
-        .send-btn:hover {
-            background: var(--gold-primary);
-        }
+        .send-btn:hover { background: var(--gold-primary); }
+        .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* Quick Actions */
         .quick-actions {
             display: flex;
             gap: 0.5rem;
-            padding: 0 1.25rem 1rem;
+            padding: 0 1rem 0.75rem;
             flex-wrap: wrap;
         }
 
         .quick-action {
-            padding: 0.5rem 1rem;
+            padding: 0.4rem 0.9rem;
             background: var(--bg-primary);
             border: 1px solid var(--border-light);
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.2s;
@@ -348,48 +359,76 @@
             color: var(--gold-primary);
         }
 
-        /* Status */
-        .status-bar {
+        .upgrade-banner {
+            margin-top: 1rem;
+            background: linear-gradient(135deg, var(--gold-light), rgba(201, 168, 124, 0.2));
+            border-radius: 12px;
+            padding: 1rem;
+            border: 1px solid var(--gold-primary);
+        }
+
+        .upgrade-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
             display: flex;
-            justify-content: center;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .upgrade-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .upgrade-option {
+            background: var(--bg-secondary);
+            border-radius: 10px;
             padding: 0.75rem;
-            background: var(--bg-primary);
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            text-align: center;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
+            cursor: pointer;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: statusPulse 2s infinite;
+        .upgrade-option:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-2px);
         }
 
-        @keyframes statusPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        .upgrade-option.current {
+            border-color: var(--gold-primary);
+            background: var(--gold-light);
         }
 
-        /* Toast */
+        .upgrade-option h4 { font-size: 0.8rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .upgrade-option p { font-size: 0.7rem; color: var(--text-muted); }
+        .upgrade-option .price { font-size: 0.75rem; color: var(--gold-dark); font-weight: 600; margin-top: 0.25rem; }
+
         .toast {
             position: fixed;
             bottom: 100px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.25rem;
             background: var(--charcoal);
             color: white;
             border-radius: 12px;
             font-weight: 500;
+            font-size: 0.85rem;
             opacity: 0;
             transition: all 0.3s;
             z-index: 1000;
         }
 
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        @media (max-width: 600px) {
+            .upgrade-options { grid-template-columns: 1fr; }
+            .container { padding: 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -403,28 +442,29 @@
             </div>
             <h1>Your AI Assistant</h1>
             <p>Ask me anything about your leads, properties, or let me help draft messages</p>
+            <div class="mode-indicator" id="mode-indicator">
+                <span class="mode-dot demo" id="mode-dot"></span>
+                <span id="mode-text">Demo Mode</span>
+            </div>
         </div>
 
         <div class="chat-container">
-            <div class="status-bar">
-                <span class="status-dot"></span>
-                <span>EMMA is online and ready to assist</span>
-            </div>
-
             <div class="chat-messages" id="chat-messages">
                 <div class="message emma">
                     <div class="message-header">
                         <span>🧠</span>
                         <span>EMMA</span>
                     </div>
-                    Hello Zee! 👋 I'm EMMA, your AI copilot. I can help you with:
-                    <br><br>
-                    • 📊 Analyzing your lead pipeline<br>
-                    • ✉️ Drafting personalized messages<br>
-                    • 🏠 Finding property matches<br>
-                    • 📅 Scheduling follow-ups<br>
-                    <br>
-                    How can I assist you today?
+                    <div class="message-content">Hello Zee! 👋 I'm EMMA, your AI copilot for luxury real estate excellence.
+
+I can help you with:
+• 🔥 Analyzing your hot leads
+• ✉️ Drafting personalized client messages
+• 🏠 Property matching insights
+• 📊 Pipeline analysis & projections
+• 📋 Task prioritization
+
+What would you like to focus on today?</div>
                 </div>
 
                 <div class="audio-visualizer inactive" id="audio-visualizer">
@@ -449,16 +489,38 @@
             </div>
 
             <div class="quick-actions">
-                <button class="quick-action" onclick="sendQuickMessage('Show me hot leads')">🔥 Hot Leads</button>
-                <button class="quick-action" onclick="sendQuickMessage('Draft a follow-up message')">✉️ Draft Message</button>
-                <button class="quick-action" onclick="sendQuickMessage('What tasks are due today?')">📋 Today\'s Tasks</button>
-                <button class="quick-action" onclick="sendQuickMessage('Summarize my pipeline')">📊 Pipeline Summary</button>
+                <button class="quick-action" onclick="sendQuickMessage('Show me my hot leads')">🔥 Hot Leads</button>
+                <button class="quick-action" onclick="sendQuickMessage('Draft a follow-up message for a luxury property viewing')">✉️ Draft Message</button>
+                <button class="quick-action" onclick="sendQuickMessage('What are my priority tasks for today?')">📋 Today's Tasks</button>
+                <button class="quick-action" onclick="sendQuickMessage('Give me a pipeline summary with projections')">📊 Pipeline</button>
             </div>
 
             <div class="chat-input-area">
                 <input type="text" class="chat-input" id="chat-input" placeholder="Ask EMMA anything..." onkeypress="handleKeyPress(event)">
-                <button class="voice-btn" id="voice-btn" onclick="toggleVoice()">🎤</button>
-                <button class="send-btn" onclick="sendMessage()">➤</button>
+                <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Voice Input">🎤</button>
+                <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Send">➤</button>
+            </div>
+        </div>
+
+        <div class="upgrade-banner">
+            <div class="upgrade-title">✨ Experience Options</div>
+            <p style="font-size: 0.8rem; color: var(--text-secondary);">Choose the experience level that suits your needs:</p>
+            <div class="upgrade-options">
+                <div class="upgrade-option current">
+                    <h4>🎯 Smart Text + Voice</h4>
+                    <p>AI chat + Browser voice</p>
+                    <div class="price">Included</div>
+                </div>
+                <div class="upgrade-option" onclick="showToast('🔊 Premium Voice upgrade available!')">
+                    <h4>🔊 Premium Voice</h4>
+                    <p>Neural TTS (ElevenLabs)</p>
+                    <div class="price">+$29/mo</div>
+                </div>
+                <div class="upgrade-option" onclick="showToast('🎬 Video Avatar upgrade available!')">
+                    <h4>🎬 Video Avatar</h4>
+                    <p>D-ID photorealistic</p>
+                    <div class="price">+$99/mo</div>
+                </div>
             </div>
         </div>
     </div>
@@ -471,7 +533,11 @@
     </button>
 
     <script>
-        // Theme
+        const API_BASE = '';
+        let currentMode = 'demo';
+        let isSpeaking = false;
+        let speechSynthesis = window.speechSynthesis;
+
         function initTheme() {
             const savedTheme = localStorage.getItem('ecc-theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -485,7 +551,6 @@
         }
         initTheme();
 
-        // Toast
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -493,25 +558,69 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // Chat
-        function sendMessage() {
+        function updateModeIndicator(mode) {
+            currentMode = mode;
+            const dot = document.getElementById('mode-dot');
+            const text = document.getElementById('mode-text');
+            
+            if (mode === 'live') {
+                dot.className = 'mode-dot live';
+                text.textContent = 'Live AI Connected';
+            } else {
+                dot.className = 'mode-dot demo';
+                text.textContent = 'Demo Mode';
+            }
+        }
+
+        async function sendMessage() {
             const input = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('send-btn');
             const message = input.value.trim();
+            
             if (!message) return;
+
+            sendBtn.disabled = true;
+            input.disabled = true;
 
             addMessage(message, 'user');
             input.value = '';
             
-            // Show typing indicator
             document.getElementById('typing').classList.add('active');
+            scrollToBottom();
             
-            // Simulate EMMA response
-            setTimeout(() => {
+            try {
+                const response = await fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message,
+                        context: 'Luxury real estate advisor in Dubai/UAE market'
+                    })
+                });
+
+                const data = await response.json();
+                
                 document.getElementById('typing').classList.remove('active');
-                const response = getEmmaResponse(message);
-                addMessage(response, 'emma');
-                playAudioFeedback();
-            }, 1500);
+                
+                if (data.ok) {
+                    updateModeIndicator(data.mode || 'demo');
+                    addMessage(data.response, 'emma');
+                    speakResponse(data.response);
+                } else {
+                    addMessage(data.response || 'I apologize, I encountered an error. Please try again.', 'emma');
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                document.getElementById('typing').classList.remove('active');
+                
+                const fallback = getLocalFallback(message);
+                addMessage(fallback, 'emma');
+                speakResponse(fallback);
+            }
+
+            sendBtn.disabled = false;
+            input.disabled = false;
+            input.focus();
         }
 
         function sendQuickMessage(message) {
@@ -525,102 +634,256 @@
             const msg = document.createElement('div');
             msg.className = `message ${type}`;
             
+            let formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
             if (type === 'emma') {
-                msg.innerHTML = `<div class="message-header"><span>🧠</span><span>EMMA</span></div>${text}`;
+                msg.innerHTML = `<div class="message-header"><span>🧠</span><span>EMMA</span></div><div class="message-content">${formattedText}</div>`;
             } else {
-                msg.textContent = text;
+                msg.innerHTML = `<div class="message-content">${formattedText}</div>`;
             }
             
             container.insertBefore(msg, typing);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('chat-messages');
             container.scrollTop = container.scrollHeight;
         }
 
-        function getEmmaResponse(message) {
-            const lower = message.toLowerCase();
-            
-            if (lower.includes('hot lead') || lower.includes('hot leads')) {
-                return `🔥 <strong>Your Hot Leads:</strong><br><br>
-                1. <strong>Ahmed Hassan</strong> - Villa in New Cairo ($1.2M)<br>
-                   Last contact: 2 hours ago<br><br>
-                2. <strong>Sarah Miller</strong> - Penthouse Downtown ($850K)<br>
-                   Viewing scheduled tomorrow<br><br>
-                3. <strong>Omar Farouk</strong> - Apartment Sheikh Zayed ($420K)<br>
-                   Ready to negotiate<br><br>
-                Would you like me to draft a follow-up for any of these?`;
-            }
-            
-            if (lower.includes('draft') || lower.includes('message')) {
-                return `✉️ <strong>Here's a personalized follow-up:</strong><br><br>
-                "Hi [Name]! 👋<br><br>
-                I hope you're doing well! I wanted to follow up on our conversation about the property in [Location].<br><br>
-                I have some exciting news - a new listing just came up that matches your criteria perfectly. Would you be interested in scheduling a viewing this week?<br><br>
-                Looking forward to hearing from you! ✨"<br><br>
-                <em>Shall I customize this for a specific lead?</em>`;
-            }
-            
-            if (lower.includes('task') || lower.includes('today')) {
-                return `📋 <strong>Today's Tasks:</strong><br><br>
-                ✅ Call Ahmed Hassan (Villa viewing feedback)<br>
-                ⏰ 2:00 PM - Property viewing with Sarah Miller<br>
-                📧 Send market update to 5 warm leads<br>
-                📞 Follow up with Omar Farouk on offer<br><br>
-                <em>Would you like me to help with any of these?</em>`;
-            }
-            
-            if (lower.includes('pipeline') || lower.includes('summary')) {
-                return `📊 <strong>Pipeline Summary:</strong><br><br>
-                🟢 <strong>New Leads:</strong> 4 leads ($2.1M potential)<br>
-                🟡 <strong>Qualified:</strong> 3 leads ($1.8M potential)<br>
-                🟠 <strong>Viewing:</strong> 2 leads ($1.5M potential)<br>
-                🔴 <strong>Negotiation:</strong> 3 leads ($2.8M potential)<br><br>
-                <strong>Total Pipeline:</strong> $8.2M<br>
-                <strong>Your Est. Commission:</strong> $164,000 (2%)<br><br>
-                <em>Great momentum! Focus on the negotiation stage leads. 💪</em>`;
-            }
-            
-            return `I understand you're asking about "${message}". Let me help you with that!<br><br>
-            I can assist with lead management, message drafting, pipeline analysis, and scheduling. Would you like me to elaborate on any specific area?`;
-        }
-
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
                 sendMessage();
             }
         }
 
-        // Voice
+        function getLocalFallback(message) {
+            const lower = message.toLowerCase();
+            
+            if (lower.includes('hot lead') || lower.includes('lead')) {
+                return `🔥 **Your Hot Leads:**
+
+1. **Ahmed Hassan** - Villa in Emirates Hills ($2.4M)
+   • Last contact: 3 hours ago
+   • Status: Very interested, second viewing
+
+2. **Sarah Al-Maktoum** - Penthouse, Marina ($1.8M)
+   • Viewing scheduled tomorrow
+   • Pre-qualified, ready to negotiate
+
+Would you like me to draft a follow-up for any of these?`;
+            }
+            
+            if (lower.includes('draft') || lower.includes('message')) {
+                return `✉️ **Personalized Follow-up:**
+
+"Dear [Name],
+
+I hope this finds you well. It was wonderful discussing the [Property] in [Location] with you.
+
+I've identified exclusive listings matching your preferences. Would you be available for a private viewing this week?
+
+Warm regards,
+Zee"
+
+*Shall I customize this for a specific client?*`;
+            }
+            
+            if (lower.includes('task') || lower.includes('today')) {
+                return `📋 **Today's Priorities:**
+
+⏰ **Scheduled:**
+- 2:00 PM - Viewing with Sarah (Marina Gate)
+- 4:30 PM - Call with Ahmed (second viewing)
+
+📝 **Pending:**
+- Send market update to 5 warm leads
+- Property comparison for James Mitchell
+
+Would you like help with any of these?`;
+            }
+            
+            if (lower.includes('pipeline') || lower.includes('summary')) {
+                return `📊 **Pipeline Summary:**
+
+| Stage | Leads | Value |
+|-------|-------|-------|
+| 🟢 New | 6 | $8.4M |
+| 🟡 Qualified | 4 | $6.2M |
+| 🔴 Negotiation | 2 | $5.0M |
+
+**Total Pipeline:** $19.6M
+**Your Est. Commission:** $392K
+
+💡 *Focus on negotiation stage - 2 deals to close!*`;
+            }
+            
+            return `I understand you're asking about "${message}". 
+
+As your AI copilot, I can assist with:
+• 🔥 Lead prioritization
+• ✉️ Message drafting
+• 📊 Pipeline analysis
+• 📋 Task management
+
+How can I help?`;
+        }
+
         let isRecording = false;
-        function toggleVoice() {
-            const btn = document.getElementById('voice-btn');
-            const visualizer = document.getElementById('audio-visualizer');
-            
-            isRecording = !isRecording;
-            
-            if (isRecording) {
-                btn.classList.add('recording');
-                btn.innerHTML = '⏹️';
-                visualizer.classList.remove('inactive');
-                showToast('🎤 Listening...');
-            } else {
-                btn.classList.remove('recording');
-                btn.innerHTML = '🎤';
-                visualizer.classList.add('inactive');
-                showToast('🎙️ Voice input received');
-                
-                // Simulate voice transcription
-                setTimeout(() => {
-                    document.getElementById('chat-input').value = 'Show me my hot leads';
+        let recognition = null;
+
+        function initVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onresult = (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    document.getElementById('chat-input').value = transcript;
+                    stopRecording();
                     sendMessage();
-                }, 500);
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    stopRecording();
+                    showToast('🎤 Voice recognition error. Please try again.');
+                };
+
+                recognition.onend = () => {
+                    stopRecording();
+                };
             }
         }
 
-        function playAudioFeedback() {
+        function toggleVoice() {
+            if (!recognition) {
+                initVoiceRecognition();
+            }
+
+            if (!recognition) {
+                showToast('🎤 Voice input not supported in this browser');
+                return;
+            }
+
+            if (isRecording) {
+                recognition.stop();
+                stopRecording();
+            } else {
+                recognition.start();
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            isRecording = true;
+            const btn = document.getElementById('voice-btn');
             const visualizer = document.getElementById('audio-visualizer');
+            btn.classList.add('recording');
+            btn.innerHTML = '⏹️';
             visualizer.classList.remove('inactive');
-            setTimeout(() => {
+            showToast('🎤 Listening...');
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            const btn = document.getElementById('voice-btn');
+            const visualizer = document.getElementById('audio-visualizer');
+            btn.classList.remove('recording');
+            btn.innerHTML = '🎤';
+            visualizer.classList.add('inactive');
+        }
+
+        async function speakResponse(text) {
+            const cleanText = text
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/[#|•\-\*]/g, '')
+                .replace(/\n+/g, '. ')
+                .substring(0, 500);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/tts`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: cleanText, voice: 'nova' })
+                });
+
+                const data = await response.json();
+
+                if (data.ok && data.mode === 'openai' && data.audio) {
+                    playAudioBase64(data.audio, data.format);
+                    return;
+                }
+            } catch (error) {
+                console.log('TTS API unavailable, using browser fallback');
+            }
+
+            browserSpeak(cleanText);
+        }
+
+        function playAudioBase64(base64, format) {
+            const audio = new Audio(`data:audio/${format};base64,${base64}`);
+            const visualizer = document.getElementById('audio-visualizer');
+            
+            visualizer.classList.remove('inactive');
+            isSpeaking = true;
+            
+            audio.onended = () => {
                 visualizer.classList.add('inactive');
-            }, 2000);
+                isSpeaking = false;
+            };
+            
+            audio.play().catch(err => {
+                console.error('Audio playback error:', err);
+                visualizer.classList.add('inactive');
+            });
+        }
+
+        function browserSpeak(text) {
+            if (!speechSynthesis) return;
+            
+            speechSynthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.95;
+            utterance.pitch = 1.0;
+            
+            const voices = speechSynthesis.getVoices();
+            const preferredVoices = voices.filter(v => 
+                v.lang.startsWith('en') && 
+                (v.name.includes('Female') || v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira'))
+            );
+            
+            if (preferredVoices.length > 0) {
+                utterance.voice = preferredVoices[0];
+            }
+            
+            const visualizer = document.getElementById('audio-visualizer');
+            
+            utterance.onstart = () => {
+                visualizer.classList.remove('inactive');
+                isSpeaking = true;
+            };
+            
+            utterance.onend = () => {
+                visualizer.classList.add('inactive');
+                isSpeaking = false;
+            };
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        initVoiceRecognition();
+
+        if (speechSynthesis) {
+            speechSynthesis.getVoices();
+            speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
         }
     </script>
 </body>
